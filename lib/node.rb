@@ -9,7 +9,6 @@ class Node
     @x      = options[:x]
     @y      = options[:y]
     @value  = options[:value]
-    @status = options[:status] || "walkable"
     @world   = world
   end
 
@@ -22,7 +21,11 @@ class Node
   end
 
   def walkable?
-    status == "walkable"
+    value == " " || value == nil
+  end
+
+  def blocked?
+    value != ( character? || target? || walkable? )
   end
 
   def coordinates
