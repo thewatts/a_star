@@ -8,12 +8,17 @@ class Node
   def initialize(options = {}, world = World.new)
     @x      = options[:x]
     @y      = options[:y]
-    @value  = options[:value]
+    @value  = set_value(options[:value])
     @world   = world
   end
 
   def character?
     value == "C"
+  end
+
+  def set_value(value)
+    return "_" if value == " "
+    value
   end
 
   def target?
@@ -49,11 +54,19 @@ class Node
   def g
     return 0 if character?
     return directional_score + parent.g if parent
-    directional_score
+    directional_score.to_i
+  end
+
+  def f
+    h.to_i + g.to_i
   end
 
   def directional_score
     return 14 if direction == "diagonal"
     return 10 if direction == "horizontal" || direction == "vertical"
+  end
+
+  def inspect
+    "<NODE: #{x}, #{y}, #{value} || G:#{g} H:#{h} F:#{f}>"
   end
 end

@@ -115,6 +115,7 @@ describe Node do
 
       expect(node.h).to eq 10
       expect(node.g).to eq 34
+      expect(node.f).to eq 44
     end
 
   end

@@ -56,4 +56,54 @@ describe World do
     expect(node.character?).to be_true
   end
 
+  it "has a current_node, that starts at the character" do
+    world_data = [
+      "   ",
+      " T ",
+      " C "
+    ]
+    world = World.new(world_data)
+    expect(world.current_node).to eq world.character
+  end
+
+  it "has a list of open nodes, starting with the character" do
+    world_data = [
+      "       ",
+      "   X   ",
+      " C X T ",
+      "   X   ",
+      "       ",
+    ]
+    world = World.new(world_data)
+    expect(world.current_node).to eq world.character
+    expect(world.open_list).to eq [world.character]
+  end
+
+  it "can find the adjacent nodes from the current_node" do
+    world_data = [
+      "       ",
+      "   X   ",
+      " C X T ",
+      "   X   ",
+      "       ",
+    ]
+    world = World.new(world_data)
+
+    diag_up_left    = world.node_at(0, 1)
+    up              = world.node_at(1, 1)
+    diag_up_right   = world.node_at(2, 1)
+    right           = world.node_at(2, 2)
+    diag_down_right = world.node_at(2, 3)
+    down            = world.node_at(1, 3)
+    diag_down_left  = world.node_at(0, 3)
+    left            = world.node_at(0, 2)
+
+    expected = [
+      right, diag_up_right, up, diag_up_left, left,
+      diag_down_left, down, diag_down_right
+    ].sort_by { |node| node.f }
+
+    expect(world.current_node).to eq world.character
+    expect(world.adjacent_for(world.current_node)).to eq expected
+  end
 end
