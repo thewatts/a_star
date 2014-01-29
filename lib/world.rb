@@ -20,12 +20,16 @@ class World
     nodes.find { |node| node.target? }
   end
 
+  def node_at(x, y)
+    nodes.find { |node| node.x == x && node.y == y }
+  end
+
   private
 
   def nodes_from_data
     data.map.with_index do |row, y|
       row.chars.map.with_index do |node_value, x|
-        Node.new({x: x, y: y, value: node_value})
+        Node.new({x: x, y: y, value: node_value}, self)
       end
     end.flatten
   end

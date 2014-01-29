@@ -43,4 +43,17 @@ describe World do
     expect(world.target.y).to eq 1
   end
 
+  it "can find a node by it's coordinates" do
+    world_data = [
+      "   ",
+      " T ",
+      " C "
+    ]
+    world = World.new(world_data)
+    node = world.node_at(1, 2)
+    expect(node.x).to eq 1
+    expect(node.y).to eq 2
+    expect(node.character?).to be_true
+  end
+
 end

@@ -34,5 +34,26 @@ describe Node do
     expect(node.parent).to eq parent_node
   end
 
+  it "belongs to a world" do
+    world = World.new
+    node = Node.new({}, world)
+
+    expect(node.world).to eq world
+  end
+
+  describe "scores" do
+
+    it "has an H score (distance from Target)" do
+      world_data = [
+        "    ",
+        "   T"
+      ]
+      world = World.new(world_data)
+      node = world.node_at(0,0)
+      expect(node.h).to eq 4
+    end
+
+  end
+
 end
 
