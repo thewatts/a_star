@@ -2,13 +2,14 @@ require './lib/node'
 
 class World
 
-  attr_reader :data, :open_list
-  attr_accessor :current_node
+  attr_reader :data
+  attr_accessor :current_node, :open_list, :closed_list
 
   def initialize(input_data = [])
     @data         = input_data
     @current_node = character
     @open_list    = [character]
+    @closed_list  = []
   end
 
   def nodes
@@ -29,10 +30,31 @@ class World
 
   def adjacent_for(node)
     nodes.find_all do |candidate|
+      next if candidate.blocked? || closed_list.include?(candidate)
       x_off_by_1?(node, candidate) && same_y?(node, candidate) ||
       y_off_by_1?(node, candidate) && same_x?(node, candidate) ||
       x_off_by_1?(node, candidate) && y_off_by_1?(node, candidate)
-    end.sort_by { |adjacent_node| adjacent_node.f }
+    end.sort_by { |adjacent_node| adjacent_node.f }.map do |adjacent_node|
+      adjacent_node.parent = node
+      adjacent_node
+    end
+  end
+
+  def evaluate
+    while current_node != target
+      @open_list += adjacent_for(current_node)
+      # binding.pry
+      @closed_list << current_node
+      @open_list.delete(current_node)
+      # binding.pry
+      @current_node = open_list.min { |node| node.f }
+      # binding.pry
+      #closed_list << current_node
+      #binding.pry
+      #adjacent = adjacent_for(current_node)
+      #binding.pry
+    end
+    current_node.path
   end
 
   private

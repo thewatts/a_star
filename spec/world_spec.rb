@@ -101,9 +101,66 @@ describe World do
     expected = [
       right, diag_up_right, up, diag_up_left, left,
       diag_down_left, down, diag_down_right
-    ].sort_by { |node| node.f }
+    ].sort_by { |node| node.f }.map do |adjacent_node|
+      adjacent_node.parent = world.current_node
+      adjacent_node
+    end
 
     expect(world.current_node).to eq world.character
     expect(world.adjacent_for(world.current_node)).to eq expected
+  end
+
+  it "can find best path to the target for a simple world" do
+    world_data = [
+      "C  T",
+    ]
+    world = World.new(world_data)
+    one   = world.node_at(1, 0)
+    two   = world.node_at(2, 0)
+
+    expected = [
+      world.character, one, two, world.target
+    ].reverse
+
+    expect(world.evaluate).to eq expected
+  end
+
+  xit "can find best path to the target for another simple world" do
+    world_data = [
+      "C   ",
+      "   T"
+    ]
+    world = World.new(world_data)
+    one   = world.node_at(1, 1)
+    two   = world.node_at(2, 0)
+
+    expected = [
+      world.character, one, two, world.target
+    ].reverse
+
+    expect(world.evaluate).to eq expected
+  end
+
+  xit "can find best path to the target" do
+    world_data = [
+      "       ",
+      "   X   ",
+      " C X T ",
+      "   X   ",
+      "       ",
+    ]
+    world = World.new(world_data)
+
+    one   = world.node_at(2, 3)
+    two   = world.node_at(2, 4)
+    three = world.node_at(3, 4)
+    four  = world.node_at(4, 4)
+    five  = world.node_at(5, 3)
+
+    expected = [
+      world.character, one, two, three, four, five, world.target
+    ]
+
+    expect(world.evaluate).to eq expected
   end
 end

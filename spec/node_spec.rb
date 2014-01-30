@@ -26,6 +26,13 @@ describe Node do
     expect(node.walkable?).to be_true
   end
 
+  it "can be blocked" do
+    walkable = Node.new(:value => "_")
+    blocked = Node.new(:value => "X")
+    expect(walkable.blocked?).to be_false
+    expect(blocked.blocked?).to be_true
+  end
+
   it "can have a parent" do
     node        = Node.new({})
     parent_node = Node.new({})
@@ -118,6 +125,29 @@ describe Node do
       expect(node.f).to eq 44
     end
 
+  end
+
+  it "can output the path back to its origin" do
+    world_data = [
+      "C       ",
+      "        ",
+      "       T"
+    ]
+    world  = World.new(world_data)
+    first  = Node.new({x: 0, y: 0}, world)
+    second = Node.new({x: 0, y: 1}, world)
+    third  = Node.new({x: 1, y: 1}, world)
+    fourth = Node.new({x: 2, y: 2}, world)
+    fifth  = Node.new({x: 2, y: 3}, world)
+
+    second.parent = first
+    third.parent  = second
+    fourth.parent = third
+    fifth.parent  = fourth
+
+    expected = [first, second, third, fourth, fifth].reverse
+    binding.pry
+    expect(fifth.path).to eq expected
   end
 
 end

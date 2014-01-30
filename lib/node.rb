@@ -17,7 +17,7 @@ class Node
   end
 
   def set_value(value)
-    return "_" if value == " "
+    return "_" if value == " " || value.nil?
     value
   end
 
@@ -26,11 +26,11 @@ class Node
   end
 
   def walkable?
-    value == " " || value == nil
+    value == "_" || target?
   end
 
   def blocked?
-    value != ( character? || target? || walkable? )
+    !walkable?
   end
 
   def coordinates
@@ -67,6 +67,18 @@ class Node
   end
 
   def inspect
-    "<NODE: #{x}, #{y}, #{value} || G:#{g} H:#{h} F:#{f}>"
+    "<NODE: #{x}, #{y}, #{value} || G:#{g} H:#{h} F:#{f} #{parent_inspect}>"
+  end
+
+  def parent_inspect
+    "parent: #{parent.x}, #{parent.y}" if parent
+  end
+
+  def path
+    if parent
+      [self, parent.path].flatten
+    else
+      [self]
+    end
   end
 end
